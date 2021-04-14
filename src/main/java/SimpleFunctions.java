@@ -1,81 +1,72 @@
 import static java.lang.Math.PI;
 
 public class SimpleFunctions {
+    Sin sin;
+    Ln ln;
 
-    public static double sin(double x, double eps) {
-        double sum = 0;
-        double preSum = x;
-        int i = 1;
-        while (Math.abs(preSum) > eps) {
-            sum += preSum;
-            preSum *= -x * x / (2 * i * (2 * i + 1));
-            i++;
+    public SimpleFunctions(Sin sin, Ln ln) {
+        this.sin = sin;
+        this.ln = ln;
+    }
+
+    public SimpleFunctions() {
+
+    }
+
+
+    public double cos(double x, double eps) {
+        double result = 0;
+        if (x < 0) x = -x;
+        while (x >= PI) {
+            x -= 2 * PI;
         }
-        return sum;
+        if (x < 0) x = -x;
+        result = Math.sqrt(1 - Math.pow(sin.sin(x, eps), 2));
+        if (x >= 0 && x <= PI / 2) return result;
+        else return -result;
     }
 
-    public static double cos(double x, double eps) {
-        double sign;
-        if (((x % (2.0 * PI)) < -1.5 * PI) || ((x % (2.0 * PI)) > 1.5 * PI) ||
-                ((x % (2.0 * PI)) < PI / 2) && ((x % (2.0 * PI)) > -PI / 2))
-            sign = 1;
-        else
-            sign = -1;
-        return sin(x + PI / 2, eps);
-    }
 
-    public static double lnX(double x, double eps){
-        if (Double.isNaN(x) || Double.isInfinite(x))
+    public double sec(double x, double eps) {
+        if (Double.isNaN(x) || Double.isInfinite(x) || cos(x, eps) == 0)
             throw new NullPointerException();
-        if (x == 1) return 0;
-        double z = (x - 1) / (x + 1);
-        double preSum = 0;
-        double sum = 2 * z;
-        int i = 1;
-        while (Math.abs(-preSum + sum) > eps) {
-            preSum = sum;
-            sum += 2 * Math.pow(z
-                    , 2 * i + 1) / (2 * i + 1);
-            i++;
-        }
-        return sum;
-
-    }
-
-    public static double sec(double x, double eps) {
         return 1 / cos(x, eps);
     }
 
-    public static double tan(double x, double eps) {
-        return sin(x, eps) / cos(x, eps);
+    public double tan(double x, double eps) {
+        return sec(x, eps) / csc(x, eps);
     }
 
-    public static double cot(double x, double eps) {
-        return cos(x, eps) / sin(x, eps);
+    public double cot(double x, double eps) {
+        if (Double.isNaN(x) || Double.isInfinite(x) || tan(x, eps) == 0)
+            throw new NullPointerException();
+        return 1 / tan(x,eps);
     }
 
-    public static double csc(double x, double eps) {
-        return 1 / sin(x, eps);
+    public double csc(double x, double eps) {
+        if (Double.isNaN(x) || Double.isInfinite(x) || sin.sin(x, eps) == 0)
+        throw new NullPointerException();
+        return 1 / (sin.sin(x, eps));
     }
 
-    public static double log2(double x, double eps) {
+    public  double log2(double x, double eps) {
         if (Double.isNaN(x) || Double.isInfinite(x))
             throw new NullPointerException();
-        return lnX(x, eps) / lnX(2, eps);
+        return ln.lnX(x, eps) / ln.lnX(2, eps);
     }
 
-    public static double log3(double x, double eps) {
-        return lnX(x, eps) / lnX(3, eps);
+    public  double log3(double x, double eps) {
+        return ln.lnX(x, eps) / ln.lnX(3, eps);
     }
 
-    public static double log10(double x, double eps) {
+    public  double log10(double x, double eps) {
         if (Double.isNaN(x) || Double.isInfinite(x))
             throw new NullPointerException();
-        return lnX(x, eps) / lnX(10, eps);
+        return ln.lnX(x, eps) / ln.lnX(10, eps);
     }
 
-    public static double log5(double x, double eps) {
-        return lnX(x, eps) / lnX(5, eps);
+    public  double log5(double x, double eps) {
+        return ln.lnX(x, eps) / ln.lnX(5, eps);
     }
 
 }
